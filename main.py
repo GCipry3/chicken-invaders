@@ -1,32 +1,9 @@
 import sys
-import random
-from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout
-                                                     
-class MyWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
-
-        self.button = QPushButton("Click me!")
-        self.text = QLabel("Hello World", alignment=Qt.AlignCenter)
-
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button)
-
-        self.button.clicked.connect(self.magic)
-
-    @Slot()
-    def magic(self):
-        self.text.setText(random.choice(self.hello))
+from PySide6.QtWidgets import QApplication
+from game.game_window import GameWindow
 
 if __name__ == "__main__":
-    app = QApplication([])
-
-    widget = MyWidget()
-    widget.resize(800, 600)
-    widget.show()
-
+    app = QApplication(sys.argv)
+    window = GameWindow()
+    window.show()
     sys.exit(app.exec())

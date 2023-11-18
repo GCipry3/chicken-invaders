@@ -1,0 +1,17 @@
+# Screen settings
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Player settings
+PLAYER_WIDTH = 50
+PLAYER_HEIGHT = 50
+PLAYER_VELOCITY = 5
+
+# Enemy settings
+ENEMY_WIDTH = 50
+ENEMY_HEIGHT = 50
+ENEMY_MIN_VELOCITY = 1
+ENEMY_MAX_VELOCITY = 3
+
+# Game settings
+GAME_FPS = 60
