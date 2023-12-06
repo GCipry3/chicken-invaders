@@ -49,14 +49,3 @@ class Enemy(Entity, UpdatableInterface):
         '''
         self.move()
         self.shoot()
-        self.update_projectiles()
-
-    def update_projectiles(self):
-        '''
-        Updates the position of the enemy's projectiles.
-        Removes projectiles that have reached the bottom of the screen.
-        '''
-        for projectile in self.projectiles:
-            projectile.update()
-            if projectile.y > SCREEN_HEIGHT:
-                self.projectiles.remove(projectile)

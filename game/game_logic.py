@@ -1,5 +1,6 @@
 from .player import Player
 from .enemy import Enemy
+from .projectile import Projectile
 from env.config import SCREEN_WIDTH, SCREEN_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT
 from random import randint
 
@@ -16,6 +17,7 @@ class GameLogic:
     def __init__(self):
         self.player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT - ENEMY_HEIGHT)
         self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(10)]
+        self.enemies_projectiles: list[Projectile] = []
 
     def update(self):
         """
@@ -26,8 +28,22 @@ class GameLogic:
 
         for enemy in self.enemies:
             enemy.update()
-
+            if enemy.projectiles :
+                self.enemies_projectiles.extend(enemy.projectiles)
+                enemy.projectiles = []
+        self.update_projectiles()
         self.check_projectile_collisions()
+
+
+    def update_projectiles(self):
+        '''
+        Updates the position of the enemy's projectiles.
+        Removes projectiles that have reached the bottom of the screen.
+        '''
+        for projectile in self.enemies_projectiles:
+            projectile.update()
+            if projectile.y > SCREEN_HEIGHT:
+                self.enemies_projectiles.remove(projectile)
 
     def check_projectile_collisions(self):
         """

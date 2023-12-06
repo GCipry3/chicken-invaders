@@ -25,6 +25,6 @@ class Renderer:
 
         for enemy in self.game_logic.enemies:
             painter.drawRect(enemy.x, enemy.y, enemy.width, enemy.height)
-        for enemy in self.game_logic.enemies:
-            for projectile in enemy.projectiles:
-                painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
+            
+        for projectile in self.game_logic.enemies_projectiles:
+            painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
