@@ -1,7 +1,7 @@
 from .entity import Entity
 from .projectile import Projectile
 from .updatable import UpdatableInterface
-from env.config import PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_VELOCITY, PLAYER_SHOT_DELAY, SCREEN_WIDTH, PROJECTILE_PLAYER_VELOCITY, PROJECTILE_PLAYER_HEIGHT, PROJECTILE_PLAYER_WIDTH
+from env.config import PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_VELOCITY, PLAYER_SHOOT_DELAY, SCREEN_WIDTH, PROJECTILE_PLAYER_VELOCITY, PROJECTILE_PLAYER_HEIGHT, PROJECTILE_PLAYER_WIDTH
 import time
 
 class Player(Entity, UpdatableInterface):
@@ -14,16 +14,16 @@ class Player(Entity, UpdatableInterface):
         y (int): The y-coordinate of the player's position.
         velocity (int): The velocity of the player's movement.
         projectiles (list[Projectile]): The list of projectiles fired by the player.
-        last_shot_time (float): The time when the player last shot a projectile.
-        shot_delay (float): The delay between consecutive shots.
+        last_shoot_time (float): The time when the player last shoot a projectile.
+        shoot_delay (float): The delay between consecutive shoots.
     """
     
     def __init__(self, x, y):
         super().__init__(x=x, y=y, width=PLAYER_WIDTH, height=PLAYER_HEIGHT)
         self.velocity = PLAYER_VELOCITY
         self.projectiles:list[Projectile] = []
-        self.last_shot_time = 0
-        self.shot_delay = PLAYER_SHOT_DELAY
+        self.last_shoot_time = 0
+        self.shoot_delay = PLAYER_SHOOT_DELAY
         self.lives = 3
 
     def move_left(self):
@@ -71,10 +71,10 @@ class Player(Entity, UpdatableInterface):
 
     def shoot(self):
         """
-        Fires a projectile from the player if the shot delay has passed since the last shot.
+        Fires a projectile from the player if the shoot delay has passed since the last shoot.
         """
         current_time = time.time()
-        if current_time - self.last_shot_time >= self.shot_delay:
+        if current_time - self.last_shoot_time >= self.shoot_delay:
             projectile = Projectile(
                 x=self.x + self.width // 2, 
                 y=self.y, 
@@ -84,7 +84,7 @@ class Player(Entity, UpdatableInterface):
                 upwards=True
             )
             self.projectiles.append(projectile)
-            self.last_shot_time = current_time
+            self.last_shoot_time = current_time
     
     def update_player(self):
         """

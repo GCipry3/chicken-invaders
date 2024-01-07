@@ -2,7 +2,7 @@ from .entity import Entity
 from .projectile import Projectile
 from .updatable import UpdatableInterface
 import random
-from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY, PROJECTILE_ENEMY_HEIGHT, PROJECTILE_ENEMY_WIDTH,ENEMY_SHOT_PROBABILITY
+from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY, PROJECTILE_ENEMY_HEIGHT, PROJECTILE_ENEMY_WIDTH,ENEMY_SHOOT_PROBABILITY
 
 class Enemy(Entity, UpdatableInterface):
     '''
@@ -12,7 +12,7 @@ class Enemy(Entity, UpdatableInterface):
         x (int): The x-coordinate of the enemy's position.
         y (int): The y-coordinate of the enemy's position.
         velocity (int): The velocity at which the enemy moves.
-        projectiles (list[Projectile]): A list of projectiles shot by the enemy.
+        projectiles (list[Projectile]): A list of projectiles shoot by the enemy.
     '''
     def __init__(self, x, y):
         super().__init__(x=x, y=y, width=ENEMY_WIDTH, height=ENEMY_HEIGHT)
@@ -33,7 +33,7 @@ class Enemy(Entity, UpdatableInterface):
         Shoots projectiles randomly.
         There is a 2% chance of shooting a projectile on each update.
         '''
-        if random.randint(0, 1000) < ENEMY_SHOT_PROBABILITY:
+        if random.randint(0, 1000) < ENEMY_SHOOT_PROBABILITY:
             return Projectile(
                 x=self.x + self.width // 2, 
                 y=self.y + self.height, 
