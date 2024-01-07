@@ -35,21 +35,27 @@ class Renderer:
         """
         player = self.game_logic.player
 
+        painter.setBrush(QColor(173, 216, 230))  # Light Blue
         painter.drawRect(player.x, player.y, player.width, player.height)
+
+        painter.setBrush(QColor("blue"))
         for projectile in self.game_logic.player.projectiles:
             painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
 
+        
+        painter.setBrush(QColor(144, 238, 144)) # Light Green
         for enemy in self.game_logic.enemies:
             painter.drawRect(enemy.x, enemy.y, enemy.width, enemy.height)
             
+        painter.setBrush(QColor("white"))
         for projectile in self.game_logic.enemies_projectiles:
             painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
 
+        painter.setBrush(QColor("brown"))
         for thigh in self.game_logic.enemies_thighs:
-            painter.setBrush(QColor("red"))
             painter.drawEllipse(thigh.x, thigh.y, thigh.width, thigh.height)
-            painter.setBrush(QColor("black"))
-
+        
+        painter.setBrush(QColor("black"))
         painter.setFont(QFont("Arial", 20))
         painter.drawText(10, 20, f"Lives: {self.game_logic.player.lives}")
         painter.drawText(10, 50, f"Level: {self.game_logic.score_board.level}")
