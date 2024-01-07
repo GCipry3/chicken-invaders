@@ -2,7 +2,7 @@ from .entity import Entity
 from .projectile import Projectile
 from .updatable import UpdatableInterface
 import random
-from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY, PROJECTILE_ENEMY_HEIGHT, PROJECTILE_ENEMY_WIDTH,ENEMY_SHOOT_PROBABILITY
+from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY, PROJECTILE_ENEMY_HEIGHT, PROJECTILE_ENEMY_WIDTH,ENEMY_SHOOT_PROBABILITY, PROJECTILE_THIGH_VELOCITY, PROJECTILE_THIGH_WIDTH, PROJECTILE_THIGH_HEIGHT
 
 class Enemy(Entity, UpdatableInterface):
     '''
@@ -14,9 +14,10 @@ class Enemy(Entity, UpdatableInterface):
         velocity (int): The velocity at which the enemy moves.
         projectiles (list[Projectile]): A list of projectiles shoot by the enemy.
     '''
-    def __init__(self, x, y):
-        super().__init__(x=x, y=y, width=ENEMY_WIDTH, height=ENEMY_HEIGHT)
-        self.velocity = random.randint(ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY)
+    def __init__(self, x, y, width=ENEMY_WIDTH, height=ENEMY_HEIGHT, velocity=ENEMY_VELOCITY, lives=1):
+        super().__init__(x=x, y=y, width=width, height=height)
+        self.velocity = velocity
+        self.lives = lives
 
     def move(self):
         '''
@@ -24,16 +25,15 @@ class Enemy(Entity, UpdatableInterface):
         If the enemy reaches the screen boundaries, it changes direction and moves down.
         '''
         self.x += self.velocity
-        if self.x > SCREEN_WIDTH - ENEMY_WIDTH or self.x < 0:
+        if self.x > SCREEN_WIDTH - self.width or self.x < 0:
             self.velocity *= -1
             #self.y += 20
 
-    def shoot(self):
+    def shoot(self ,probability=ENEMY_SHOOT_PROBABILITY):
         '''
-        Shoots projectiles randomly.
-        There is a 2% chance of shooting a projectile on each update.
+        Shoots projectiles with a given probability.
         '''
-        if random.randint(0, 1000) < ENEMY_SHOOT_PROBABILITY:
+        if random.randint(0, 1000) < probability:
             return Projectile(
                 x=self.x + self.width // 2, 
                 y=self.y + self.height, 
@@ -44,8 +44,18 @@ class Enemy(Entity, UpdatableInterface):
             )
         return None
 
+    def drop_thigh(self):
+        return [ Projectile(
+            x=self.x, 
+            y=self.y, 
+            velocity=PROJECTILE_THIGH_VELOCITY, 
+            width=PROJECTILE_THIGH_WIDTH, 
+            height=PROJECTILE_THIGH_HEIGHT, 
+            upwards=False
+        ) ]
+
     def update(self):
         '''
-        Updates the enemy's position and projectiles.
+        Updates the enemy's position.
         '''
         self.move()
