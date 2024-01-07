@@ -17,7 +17,6 @@ class Enemy(Entity, UpdatableInterface):
     def __init__(self, x, y):
         super().__init__(x=x, y=y, width=ENEMY_WIDTH, height=ENEMY_HEIGHT)
         self.velocity = random.randint(ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY)
-        self.projectiles:list[Projectile] = []
 
     def move(self):
         '''
@@ -35,7 +34,7 @@ class Enemy(Entity, UpdatableInterface):
         There is a 2% chance of shooting a projectile on each update.
         '''
         if random.randint(0, 1000) < ENEMY_SHOT_PROBABILITY:
-            projectile = Projectile(
+            return Projectile(
                 x=self.x + self.width // 2, 
                 y=self.y + self.height, 
                 velocity=PROJECTILE_ENEMY_VELOCITY,
@@ -43,11 +42,10 @@ class Enemy(Entity, UpdatableInterface):
                 height=PROJECTILE_ENEMY_HEIGHT,
                 upwards=False
             )
-            self.projectiles.append(projectile)
+        return None
 
     def update(self):
         '''
         Updates the enemy's position and projectiles.
         '''
         self.move()
-        self.shoot()

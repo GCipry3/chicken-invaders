@@ -21,35 +21,58 @@ class GameLogic:
         self.enemies_projectiles: list[Projectile] = []
         self.score_board = ScoreBoard()
 
+    def check_next_level(self):
+        '''
+        Checks if the player has killed all the enemies.
+        '''
+        if not self.enemies:
+            self.next_level()
+    
+    def check_game_over(self):
+        '''
+        Checks if the player has no lives left.
+        '''
+        return self.player.lives == 0
+
     def update(self):
         """
         Updates the game logic.
-        It updates the player and enemies, and checks for projectile collisions.
+        It updates the player and enemies, and checks for collisions.
+        Returns:
+            True: If the game is still running.
+            False: If the game is over.
         """
         self.player.update()
+        self.update_enemy()
+        self.update_enemy_projectiles()
 
-        for enemy in self.enemies:
-            enemy.update()
-            if enemy.projectiles :
-                self.enemies_projectiles.extend(enemy.projectiles)
-                enemy.projectiles = []
-        self.update_projectiles()
-        self.check_projectile_collisions()
+        self.check_player_projectile_collisions()
+        self.check_enemy_projectile_collisions()
+        self.check_enemy_collisions()
 
-        if not self.enemies:
-            self.next_level()
+        self.check_next_level()
 
-        if self.player.lives == 0:
+        if self.check_game_over():
             return False
 
         return True
+
+    def update_enemy(self):
+        '''
+        Update the enemy projectiles list.
+        '''
+        for enemy in self.enemies:
+            enemy.update()
+            projectile = enemy.shoot()
+            if projectile:
+                self.enemies_projectiles.append(projectile)
 
     def next_level(self):
         self.score_board.level += 1
         self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT + self.score_board.level)]
         self.enemies_projectiles: list[Projectile] = []
 
-    def update_projectiles(self):
+    def update_enemy_projectiles(self):
         '''
         Updates the position of the enemy's projectiles.
         Removes projectiles that have reached the bottom of the screen.
@@ -59,11 +82,11 @@ class GameLogic:
             if projectile.y > SCREEN_HEIGHT:
                 self.enemies_projectiles.remove(projectile)
 
-    def check_projectile_collisions(self):
-        """
-        Checks for projectile collisions with enemies.
-        If a collision is detected, removes the projectile and enemy from the game.
-        """
+    def check_player_projectile_collisions(self):
+        '''
+        Checks for collisions between the player's projectiles and the enemies.
+        Removes the projectiles and enemies that have collided.
+        '''
         for projectile in self.player.projectiles:
             for enemy in self.enemies:
                 if projectile.check_collision(enemy):
@@ -72,19 +95,29 @@ class GameLogic:
                     self.score_board.chicken_kills += 1
                     break
         
-        for projectile in self.enemies_projectiles:
-            if projectile.check_collision(self.player):
-                self.enemies_projectiles.remove(projectile)
-                self.player.lives -= 1
-        
-        for enemy in self.enemies:
-            if enemy.check_collision(self.player):
-                self.enemies.remove(enemy)
-                self.player.lives -= 1
-        
         for projectile in self.player.projectiles:
             for enemy_projectile in self.enemies_projectiles:
                 if projectile.check_collision(enemy_projectile):
                     self.player.projectiles.remove(projectile)
                     self.enemies_projectiles.remove(enemy_projectile)
                     break
+    
+    def check_enemy_projectile_collisions(self):
+        '''
+        Checks for collisions between the enemy's projectiles and the player.
+        Removes the projectiles that have collided.
+        '''
+        for projectile in self.enemies_projectiles:
+            if projectile.check_collision(self.player):
+                self.enemies_projectiles.remove(projectile)
+                self.player.lives -= 1
+    
+    def check_enemy_collisions(self):
+        '''
+        Checks for collisions between the enemies and the player.
+        Removes the enemies that have collided.
+        '''
+        for enemy in self.enemies:
+            if enemy.check_collision(self.player):
+                self.enemies.remove(enemy)
+                self.player.lives -= 1
