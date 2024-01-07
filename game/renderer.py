@@ -30,4 +30,4 @@ class Renderer:
             painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
 
         painter.drawText(10, 10, f"Lives: {self.game_logic.player.lives}")
-        painter.drawText(10, 30, f"Level: {self.game_logic.level}")
+        painter.drawText(10, 30, f"Level: {self.game_logic.score_board.level}")

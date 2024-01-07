@@ -1,8 +1,9 @@
 from .player import Player
 from .enemy import Enemy
 from .projectile import Projectile
-from env.config import SCREEN_WIDTH, SCREEN_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT
+from env.config import SCREEN_WIDTH, SCREEN_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_COUNT
 from random import randint
+from .score_board import ScoreBoard
 
 class GameLogic:
     """
@@ -16,10 +17,9 @@ class GameLogic:
 
     def __init__(self):
         self.player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT - ENEMY_HEIGHT)
-        self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(10)]
+        self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT)]
         self.enemies_projectiles: list[Projectile] = []
-        self.level = 1
-        self.chicken_kills = 0
+        self.score_board = ScoreBoard()
 
     def update(self):
         """
@@ -37,8 +37,9 @@ class GameLogic:
         self.check_projectile_collisions()
 
         if not self.enemies:
-            self.level += 1
-            self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(10 + self.level)]
+            self.score_board.level += 1
+            self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT + self.score_board.level)]
+            self.enemies_projectiles: list[Projectile] = []
 
 
     def update_projectiles(self):
@@ -61,7 +62,7 @@ class GameLogic:
                 if projectile.check_collision(enemy):
                     self.player.projectiles.remove(projectile)
                     self.enemies.remove(enemy)
-                    self.chicken_kills += 1
+                    self.score_board.chicken_kills += 1
                     break
         
         for projectile in self.enemies_projectiles:
