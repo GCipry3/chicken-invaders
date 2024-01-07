@@ -37,10 +37,17 @@ class GameLogic:
         self.check_projectile_collisions()
 
         if not self.enemies:
-            self.score_board.level += 1
-            self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT + self.score_board.level)]
-            self.enemies_projectiles: list[Projectile] = []
+            self.next_level()
 
+        if self.player.lives == 0:
+            return False
+
+        return True
+
+    def next_level(self):
+        self.score_board.level += 1
+        self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT + self.score_board.level)]
+        self.enemies_projectiles: list[Projectile] = []
 
     def update_projectiles(self):
         '''

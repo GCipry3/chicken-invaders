@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QPainter, QKeyEvent
 from .game_logic import GameLogic
 from .input_handler import InputHandler
@@ -28,6 +28,7 @@ class GameWindow(QMainWindow):
         self.game_logic = GameLogic()
         self.input_handler = InputHandler(player=self.game_logic.player)
         self.renderer = Renderer(self.game_logic)
+        self.game_state = 0 # 0: menu, 1: game, 2: game over
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_game)
@@ -38,14 +39,39 @@ class GameWindow(QMainWindow):
         Overrides the paintEvent method of QMainWindow to render the game on the screen.
         """
         painter = QPainter(self)
-        self.renderer.render(painter)
+
+        if self.game_state == 0:
+            self.renderer.render_menu(painter)
+        elif self.game_state == 1:
+            self.renderer.render_game(painter)
+        elif self.game_state == 2:
+            self.renderer.render_game_over(painter)
+
+    def reset_game(self):
+        """
+        Resets the game by resetting the game logic, input handler, and game state.
+        """
+        self.game_logic = GameLogic()
+        self.input_handler = InputHandler(player=self.game_logic.player)
+        self.renderer = Renderer(self.game_logic)
 
     def update_game(self):
         """
         Updates the game logic, input handling, and triggers a repaint of the window.
         """
         self.input_handler.update()
-        self.game_logic.update()
+
+        if self.game_state == 0:
+            if self.input_handler.key_states[Qt.Key_Space]:
+                self.input_handler.key_states[Qt.Key_Space] = False
+                self.game_state = 1
+        elif self.game_state == 1:
+            if not self.game_logic.update():
+                self.game_state = 2
+        elif self.game_state == 2:
+            if self.input_handler.key_states[Qt.Key_Space]:
+                self.reset_game()
+                self.game_state = 1
         self.update()
 
     def keyPressEvent(self, event: QKeyEvent):

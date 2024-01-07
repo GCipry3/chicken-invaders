@@ -13,7 +13,7 @@ class Renderer:
     def __init__(self, game_logic: GameLogic):
         self.game_logic = game_logic
 
-    def render(self, painter: QPainter):
+    def render_game(self, painter: QPainter):
         """
         Renders the game objects on the screen using the provided QPainter object.
         """
@@ -31,3 +31,19 @@ class Renderer:
 
         painter.drawText(10, 10, f"Lives: {self.game_logic.player.lives}")
         painter.drawText(10, 30, f"Level: {self.game_logic.score_board.level}")
+
+    def render_menu(self, painter: QPainter):
+        """
+        Renders the menu on the screen using the provided QPainter object.
+        """
+        painter.drawText(10, 10, "Chicken Invaders")
+        painter.drawText(10, 30, "Press Space to start the game!")
+    
+    def render_game_over(self, painter: QPainter):
+        """
+        Renders the game over screen on the screen using the provided QPainter object.
+        """
+        painter.drawText(10, 10, "Game Over!")
+        painter.drawText(10, 30, f"Level: {self.game_logic.score_board.level}")
+        painter.drawText(10, 50, f"Chicken Kills: {self.game_logic.score_board.chicken_kills}")
+        painter.drawText(10, 70, "Press Space to restart the game!")
