@@ -28,3 +28,6 @@ class Renderer:
             
         for projectile in self.game_logic.enemies_projectiles:
             painter.drawRect(projectile.x, projectile.y, projectile.width, projectile.height)
+
+        painter.drawText(10, 10, f"Lives: {self.game_logic.player.lives}")
+        painter.drawText(10, 30, f"Level: {self.game_logic.level}")

@@ -18,6 +18,8 @@ class GameLogic:
         self.player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT - ENEMY_HEIGHT)
         self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(10)]
         self.enemies_projectiles: list[Projectile] = []
+        self.level = 1
+        self.chicken_kills = 0
 
     def update(self):
         """
@@ -33,6 +35,10 @@ class GameLogic:
                 enemy.projectiles = []
         self.update_projectiles()
         self.check_projectile_collisions()
+
+        if not self.enemies:
+            self.level += 1
+            self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(10 + self.level)]
 
 
     def update_projectiles(self):
@@ -55,4 +61,22 @@ class GameLogic:
                 if projectile.check_collision(enemy):
                     self.player.projectiles.remove(projectile)
                     self.enemies.remove(enemy)
+                    self.chicken_kills += 1
+                    break
+        
+        for projectile in self.enemies_projectiles:
+            if projectile.check_collision(self.player):
+                self.enemies_projectiles.remove(projectile)
+                self.player.lives -= 1
+        
+        for enemy in self.enemies:
+            if enemy.check_collision(self.player):
+                self.enemies.remove(enemy)
+                self.player.lives -= 1
+        
+        for projectile in self.player.projectiles:
+            for enemy_projectile in self.enemies_projectiles:
+                if projectile.check_collision(enemy_projectile):
+                    self.player.projectiles.remove(projectile)
+                    self.enemies_projectiles.remove(enemy_projectile)
                     break

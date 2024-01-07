@@ -24,6 +24,7 @@ class Player(Entity, UpdatableInterface):
         self.projectiles:list[Projectile] = []
         self.last_shot_time = 0
         self.shot_delay = PLAYER_SHOT_DELAY
+        self.lives = 3
 
     def move_left(self):
         """
