@@ -1,14 +1,4 @@
 class Entity:
-    '''
-    The Entity class represents a generic entity in the game.
-
-    Attributes:
-    - x: The x-coordinate of the entity's position.
-    - y: The y-coordinate of the entity's position.
-    - width: The width of the entity.
-    - height: The height of the entity.
-    '''
-
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -16,12 +6,6 @@ class Entity:
         self.height = height
 
     def check_collision(self, other: 'Entity'):
-        '''
-        Checks if the entity collides with another entity.
-
-        Returns:
-        - True if the entities collide, False otherwise.
-        '''
         return (self.x < other.x + other.width and
                 self.x + self.width > other.x and
                 self.y < other.y + other.height and

@@ -4,22 +4,10 @@ from env.config import SUPER_ENEMY_WIDTH, SUPER_ENEMY_HEIGHT, SUPER_ENEMY_VELOCI
 
 
 class SuperEnemy(Enemy):
-    '''
-    Represents a super enemy in the game.
-
-    Attributes:
-        x (int): The x-coordinate of the super enemy's position.
-        y (int): The y-coordinate of the super enemy's position.
-        velocity (int): The velocity at which the super enemy moves.
-        projectiles (list[Projectile]): A list of projectiles shoot by the super enemy.
-    '''
     def __init__(self, x, y, width=SUPER_ENEMY_WIDTH, height=SUPER_ENEMY_HEIGHT, velocity=SUPER_ENEMY_VELOCITY, lives=SUPER_ENEMY_LIVES):
         super().__init__(x=x, y=y, width=width, height=height, velocity=velocity, lives=lives)
 
     def shoot(self):
-        '''
-        Shoots projectiles with a given probability.
-        '''
         return super().shoot(probability=SUPER_ENEMY_SHOOT_PROBABILITY)
 
     def drop_thigh(self):
