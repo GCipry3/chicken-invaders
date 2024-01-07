@@ -13,6 +13,21 @@ class Renderer:
 
     def __init__(self, game_logic: GameLogic):
         self.game_logic = game_logic
+    
+    def render_menu(self, painter: QPainter):
+        """
+        Renders the menu on the screen using the provided QPainter object.
+        """
+        painter.setFont(QFont("Arial", 24, QFont.Bold))
+
+        text = "Chicken Invaders"
+        text_width = painter.fontMetrics().horizontalAdvance(text)  
+        painter.drawText((SCREEN_WIDTH - text_width) // 2, SCREEN_HEIGHT // 2 - 25, text)
+
+        text = "Press Space to start the game!"
+        text_width = painter.fontMetrics().horizontalAdvance(text)  
+        painter.drawText((SCREEN_WIDTH - text_width) // 2, SCREEN_HEIGHT // 2 + 25, text)
+
 
     def render_game(self, painter: QPainter):
         """
@@ -38,20 +53,6 @@ class Renderer:
         painter.setFont(QFont("Arial", 20))
         painter.drawText(10, 20, f"Lives: {self.game_logic.player.lives}")
         painter.drawText(10, 50, f"Level: {self.game_logic.score_board.level}")
-    
-    def render_menu(self, painter: QPainter):
-        """
-        Renders the menu on the screen using the provided QPainter object.
-        """
-        painter.setFont(QFont("Arial", 24, QFont.Bold))
-
-        text = "Chicken Invaders"
-        text_width = painter.fontMetrics().horizontalAdvance(text)  
-        painter.drawText((SCREEN_WIDTH - text_width) // 2, SCREEN_HEIGHT // 2 - 25, text)
-
-        text = "Press Space to start the game!"
-        text_width = painter.fontMetrics().horizontalAdvance(text)  
-        painter.drawText((SCREEN_WIDTH - text_width) // 2, SCREEN_HEIGHT // 2 + 25, text)
 
     def render_game_over(self, painter: QPainter):
         """
