@@ -1,7 +1,7 @@
 from .player import Player
 from .enemy import Enemy
 from .projectile import Projectile
-from env.config import SCREEN_WIDTH, SCREEN_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_COUNT
+from env.config import SCREEN_WIDTH, SCREEN_HEIGHT, ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_COUNT, PROJECTILE_THIGH_VELOCITY, PROJECTILE_THIGH_WIDTH, PROJECTILE_THIGH_HEIGHT
 from random import randint
 from .score_board import ScoreBoard
 
@@ -19,6 +19,7 @@ class GameLogic:
         self.player = Player(SCREEN_WIDTH // 2, SCREEN_HEIGHT - ENEMY_HEIGHT)
         self.enemies:list[Enemy] = [Enemy(randint(0, SCREEN_WIDTH - ENEMY_WIDTH), 100) for _ in range(ENEMY_COUNT)]
         self.enemies_projectiles: list[Projectile] = []
+        self.enemies_thighs: list[Projectile] = []
         self.score_board = ScoreBoard()
 
     def check_next_level(self):
@@ -45,10 +46,12 @@ class GameLogic:
         self.player.update()
         self.update_enemy()
         self.update_enemy_projectiles()
+        self.update_enemy_thighs()
 
         self.check_player_projectile_collisions()
         self.check_enemy_projectile_collisions()
         self.check_enemy_collisions()
+        self.check_player_collisions()
 
         self.check_next_level()
 
@@ -82,6 +85,16 @@ class GameLogic:
             if projectile.y > SCREEN_HEIGHT:
                 self.enemies_projectiles.remove(projectile)
 
+    def update_enemy_thighs(self):
+        '''
+        Updates the position of the enemy's thighs.
+        Removes thighs that have reached the bottom of the screen.
+        '''
+        for thigh in self.enemies_thighs:
+            thigh.update()
+            if thigh.y > SCREEN_HEIGHT:
+                self.enemies_thighs.remove(thigh)
+
     def check_player_projectile_collisions(self):
         '''
         Checks for collisions between the player's projectiles and the enemies.
@@ -90,6 +103,15 @@ class GameLogic:
         for projectile in self.player.projectiles:
             for enemy in self.enemies:
                 if projectile.check_collision(enemy):
+                    self.enemies_thighs.append(
+                        Projectile(
+                            x=enemy.x, 
+                            y=enemy.y, 
+                            velocity=PROJECTILE_THIGH_VELOCITY, 
+                            width=PROJECTILE_THIGH_WIDTH, 
+                            height=PROJECTILE_THIGH_HEIGHT, 
+                            upwards=False
+                        ))
                     self.player.projectiles.remove(projectile)
                     self.enemies.remove(enemy)
                     self.score_board.chicken_kills += 1
@@ -121,3 +143,14 @@ class GameLogic:
             if enemy.check_collision(self.player):
                 self.enemies.remove(enemy)
                 self.player.lives -= 1
+    
+    def check_player_collisions(self):
+        '''
+        Checks for collisions between the player and the thighs.
+        Removes the thighs that have collided and update the score_board.
+        '''
+        for thigh in self.enemies_thighs:
+            if thigh.check_collision(self.player):
+                self.enemies_thighs.remove(thigh)
+                self.score_board.collected_thighs += 1
+                break
