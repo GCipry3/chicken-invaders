@@ -2,7 +2,7 @@ from .entity import Entity
 from .projectile import Projectile
 from .updatable import UpdatableInterface
 import random
-from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY
+from env.config import ENEMY_WIDTH, ENEMY_HEIGHT, ENEMY_MIN_VELOCITY, ENEMY_MAX_VELOCITY, SCREEN_WIDTH, SCREEN_HEIGHT, PROJECTILE_ENEMY_VELOCITY, PROJECTILE_ENEMY_HEIGHT, PROJECTILE_ENEMY_WIDTH,ENEMY_SHOT_PROBABILITY
 
 class Enemy(Entity, UpdatableInterface):
     '''
@@ -34,11 +34,13 @@ class Enemy(Entity, UpdatableInterface):
         Shoots projectiles randomly.
         There is a 2% chance of shooting a projectile on each update.
         '''
-        if random.randint(0, 100) < 1:
+        if random.randint(0, 1000) < ENEMY_SHOT_PROBABILITY:
             projectile = Projectile(
                 x=self.x + self.width // 2, 
                 y=self.y + self.height, 
                 velocity=PROJECTILE_ENEMY_VELOCITY,
+                width=PROJECTILE_ENEMY_WIDTH,
+                height=PROJECTILE_ENEMY_HEIGHT,
                 upwards=False
             )
             self.projectiles.append(projectile)

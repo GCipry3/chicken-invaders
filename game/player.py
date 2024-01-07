@@ -1,7 +1,7 @@
 from .entity import Entity
 from .projectile import Projectile
 from .updatable import UpdatableInterface
-from env.config import PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_VELOCITY, PLAYER_SHOT_DELAY, SCREEN_WIDTH, PROJECTILE_PLAYER_VELOCITY
+from env.config import PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_VELOCITY, PLAYER_SHOT_DELAY, SCREEN_WIDTH, PROJECTILE_PLAYER_VELOCITY, PROJECTILE_PLAYER_HEIGHT, PROJECTILE_PLAYER_WIDTH
 import time
 
 class Player(Entity, UpdatableInterface):
@@ -79,6 +79,8 @@ class Player(Entity, UpdatableInterface):
                 x=self.x + self.width // 2, 
                 y=self.y, 
                 velocity=PROJECTILE_PLAYER_VELOCITY, 
+                width=PROJECTILE_PLAYER_WIDTH,
+                height=PROJECTILE_PLAYER_HEIGHT,
                 upwards=True
             )
             self.projectiles.append(projectile)

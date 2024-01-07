@@ -1,6 +1,5 @@
 from .entity import Entity
 from .updatable import UpdatableInterface
-from env.config import PROJECTILE_WIDTH, PROJECTILE_HEIGHT
 
 class Projectile(Entity, UpdatableInterface):
     """
@@ -13,8 +12,8 @@ class Projectile(Entity, UpdatableInterface):
     - upwards: A boolean indicating whether the projectile moves upwards or downwards.
     """
 
-    def __init__(self, x, y, velocity, upwards=True):
-        super().__init__(x=x, y=y, width=PROJECTILE_WIDTH, height=PROJECTILE_HEIGHT)
+    def __init__(self, x, y, velocity, width, height, upwards=True):
+        super().__init__(x=x, y=y, width=width, height=height)
         self.velocity = velocity
         self.upwards = upwards 
 
